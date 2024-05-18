@@ -4,11 +4,13 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { useReducer, useState } from "react";
 
 import countries from "./../../assets/table_test.json";
+import { HiArrowDownCircle, HiArrowUpCircle } from "react-icons/hi2";
 
 export const Route = createFileRoute("/table/")({
   component: Index,
@@ -25,16 +27,21 @@ const columnHelper = createColumnHelper<Country>();
 
 const columns = [
   columnHelper.accessor("name", {
-    header: () => <span className="w-full">Country Name</span>,
+    header: () => <span>Country Name</span>,
   }),
   columnHelper.accessor("country_code", {
-    header: () => <span className="w-full">Country Country Code</span>,
+    header: () => <span>Country Country Code</span>,
   }),
   columnHelper.accessor("flag", {
-    header: () => <span className="w-full">Country Flag</span>,
+    header: () => <span>Country Flag</span>,
+    cell: (f) => (
+      <div className="h-10">
+        <img src={f.getValue()} alt="" className="aspect-video h-full" />
+      </div>
+    ),
   }),
   columnHelper.accessor("phone_code", {
-    header: () => <span className="w-full">Country Phone Code</span>,
+    header: () => <span>Country Phone Code</span>,
   }),
 ];
 
@@ -42,27 +49,47 @@ function Index() {
   const [data] = useState<Country[]>(() => [...countries]);
   const rerender = useReducer(() => ({}), {})[1];
 
+  const [sorting, setSorting] = useState([]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting: sorting,
+    },
+    onSortingChange: setSorting,
   });
 
   return (
-    <div className="w-screen bg-blue-200 p-2">
-      <table className="w-full p-10">
+    <div className="w-screen bg-blue-200 flex flex-col justify-center items-center">
+      <table className="w-9/12 p-10">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                <th
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  <div className="w-full flex justify-start items-center gap-5">
+                    {header.isPlaceholder ? null : (
+                      <div className="w-full flex justify-start items-center gap-5">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                        {
+                          {
+                            asc: <HiArrowUpCircle size={24} />,
+                            desc: <HiArrowDownCircle size={24} />,
+                          }[header.column.getIsSorted() ?? null]
+                        }
+                      </div>
+                    )}
+                  </div>{" "}
                 </th>
               ))}
             </tr>
@@ -84,7 +111,7 @@ function Index() {
 
       <div className="h-4" />
 
-      <div className="w-full flex justify-around items-center">
+      <div className="w-8/12 flex justify-around items-center">
         <button onClick={() => rerender()} className="border p-2">
           Rerender
         </button>
@@ -93,11 +120,19 @@ function Index() {
           First Page
         </button>
 
-        <button onClick={() => table.previousPage()} className="border p-2">
+        <button
+          disabled={!table.getCanPreviousPage()}
+          onClick={() => table.previousPage()}
+          className="border p-2"
+        >
           Previous Page
         </button>
 
-        <button onClick={() => table.nextPage()} className="border p-2">
+        <button
+          disabled={!table.getCanNextPage()}
+          onClick={() => table.nextPage()}
+          className="border p-2"
+        >
           Next Page
         </button>
 
