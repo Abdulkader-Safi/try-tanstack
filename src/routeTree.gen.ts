@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TableIndexImport } from './routes/table/index'
+import { Route as TableTable2Import } from './routes/table/table2'
 
 // Create Virtual Routes
 
@@ -31,6 +32,11 @@ const TableIndexRoute = TableIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const TableTable2Route = TableTable2Import.update({
+  path: '/table/table2',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -40,6 +46,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/table/table2': {
+      id: '/table/table2'
+      path: '/table/table2'
+      fullPath: '/table/table2'
+      preLoaderRoute: typeof TableTable2Import
       parentRoute: typeof rootRoute
     }
     '/table/': {
@@ -56,6 +69,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
+  TableTable2Route,
   TableIndexRoute,
 })
 

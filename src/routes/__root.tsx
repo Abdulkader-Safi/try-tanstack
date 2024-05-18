@@ -13,6 +13,9 @@ export const Route = createRootRoute({
         <Link to="/table" className="[&.active]:font-bold">
           Table
         </Link>
+        <Link to="/table/table2" className="[&.active]:font-bold">
+          Table2
+        </Link>
       </div>
       <hr className="m-10" />
       <Outlet />
