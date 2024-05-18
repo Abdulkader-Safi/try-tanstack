@@ -9,12 +9,9 @@ export const Route = createRootRoute({
       <div className="w-full p-2 flex justify-around items-center gap-2">
         <Link to="/" className="[&.active]:font-bold">
           Home
-        </Link>{" "}
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>{" "}
-        <Link to="/test/test" className="[&.active]:font-bold">
-          Test
+        </Link>
+        <Link to="/table" className="[&.active]:font-bold">
+          Table
         </Link>
       </div>
       <hr className="m-10" />

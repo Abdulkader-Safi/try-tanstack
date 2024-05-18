@@ -13,27 +13,21 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as TestTestImport } from './routes/test/test'
+import { Route as TableIndexImport } from './routes/table/index'
 
 // Create Virtual Routes
 
-const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
-
-const AboutLazyRoute = AboutLazyImport.update({
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const TestTestRoute = TestTestImport.update({
-  path: '/test/test',
+const TableIndexRoute = TableIndexImport.update({
+  path: '/table/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -48,18 +42,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/test/test': {
-      id: '/test/test'
-      path: '/test/test'
-      fullPath: '/test/test'
-      preLoaderRoute: typeof TestTestImport
+    '/table/': {
+      id: '/table/'
+      path: '/table'
+      fullPath: '/table'
+      preLoaderRoute: typeof TableIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -69,8 +56,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  AboutLazyRoute,
-  TestTestRoute,
+  TableIndexRoute,
 })
 
 /* prettier-ignore-end */
